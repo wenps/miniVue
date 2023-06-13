@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="file" id="input">
+<button id="upload">上传</button>
+<!-- 上传进度 -->
+<div style="width: 300px" id="progress"></div>
+<script>
+let input = document.getElementById('input')
+let upload = document.getElementById('upload')
+let files = {}//创建一个文件对象
+let chunkList = []//存放切片的数组
+// 读取文件
+input.addEventListener('change', (e) => {
+    files = e.target.files[0]
+    console.log(files);
+    //创建切片
+    //上传切片
+})
+</script>
+</body>
+</html>
