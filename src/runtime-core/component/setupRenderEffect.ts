@@ -35,8 +35,8 @@ export function setupRenderEffect(instance, vnode ,container, insertPlace) {
 
             const {next, vnode} = instance // vnode指代当前的虚拟节点，next值代表下次要更新的虚拟节点 操作：vnode > next
             if(next) {
-                
-                next.el = vnode.el
+                // 这一步其实是要将instance的vnode相关属性都替换成next上的，就相当于instance的vnode更新成了next，后面更新的时候使用的vnode就会是我们这里更新的next
+                next.el = vnode.el // 把老节点的el赋值给要更新的虚拟节点的el
                 updateComponentPreRender(instance, next)
             }
 

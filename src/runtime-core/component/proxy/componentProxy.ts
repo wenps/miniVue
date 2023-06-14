@@ -2,6 +2,7 @@ import { hasOwn } from "../../../share/index"
 
 // 当使用this.$el时，按照vue的规范，需要返回当前组件的元素实例
 // 当使用this.$slots时，按照vue的规范，父组件接收子组件作为其下属vnode，slot则是接收子组件时，父组件往子组件里面传入的children值
+// 当使用this.$props时，获取组件传入的props
 const publicMap = {
     $el: (i) => i.vnode.el, 
     $slots: (i) => i.slots,
