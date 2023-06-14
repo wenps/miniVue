@@ -1,6 +1,7 @@
 
 import { effect } from "../../reactivity/effect"
 import { patch } from "../renderer"
+import { queueJobs } from "./scheduler";
 // instance 组件实例对象 container
 
 // 注意这里传入的vnode是一个组件类型的vnode，通过render函数返回了一个元素类型 vnode > subTree, 然后在递归patch subTree的时候将实例化的元素即el挂了上去，对应： const el = (vnode.el = type.createElement(vnode.type));
@@ -50,6 +51,11 @@ export function setupRenderEffect(instance, vnode ,container, insertPlace) {
 
         }
 
+    }, {
+        scheduler() {
+            console.log('update - scheduler')
+            queueJobs(instance.update)
+        }
     })
 }
 
