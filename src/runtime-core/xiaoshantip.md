@@ -1,0 +1,1 @@
+watchEffect 和vue的运行时强相关的，组件渲染前运行的，可以通过flush：post变成组件渲染之后
