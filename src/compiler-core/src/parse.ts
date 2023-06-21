@@ -41,6 +41,11 @@ function parseChildren(context) {
             node = parseElement(context) // 解析元素类型
         }
     }
+    // 处理text类型节点，默认情况下如果没有命中元素也没有命中插值即取不到node，默认为text
+    if(!node) { 
+        node = parseText(context)
+    }
+
     nodes.push(node) // 设置节点列表
     return nodes
 }
@@ -67,6 +72,7 @@ function parseInterpolation(context) {
     }
 }
 
+// 解析元素类型
 function parseElement(context) {
     const element = parseTag(context, TagType.start) // 处理开头标签
     parseTag(context, TagType.end) // 处理结束标签
@@ -74,6 +80,7 @@ function parseElement(context) {
     
 }
 
+// 解析元素类型的tag
 function parseTag(context: any, type: TagType) {
     // 1.解析tag
     const match: any = /^<\/?([a-z]*)/i.exec(context.source) // 标签解析正则
@@ -89,7 +96,21 @@ function parseTag(context: any, type: TagType) {
     }
 }
 
+// 解析text类型
+function parseText(context: any): any {
+    // 1.获取text内容
+    const content = context.source.slice(0, context.source.length)
+    // 2.推进
+    advanceBy(context, content.length)
+
+    return {
+        type: NodeTypes.TEXT,
+        content
+    }
+}
+
 // 封装推进代码
 function advanceBy(context:any, length:number) {
     context.source = context.source.slice(length)
 }
+
