@@ -1,4 +1,8 @@
 import { NodeTypes } from "./ast"
+enum TagType  {
+    start,
+    end
+}
 
 export function baseParse(content:string) {
 
@@ -7,6 +11,13 @@ export function baseParse(content:string) {
 
     return createRoot(parseChildren(context))
 }
+
+// 封装content逻辑
+function createParserContext(content: string) {
+    return {
+     source:content
+    }
+ }
 
 // 抽离根节点逻辑
 function createRoot(children) {
@@ -19,9 +30,16 @@ function createRoot(children) {
 function parseChildren(context) {
     const nodes:any = [] // 创建节点列表
     let node;
+    const s = context.source
     // 判断是否插值类型节点
-    if(context.source.startsWith('{{')) {
-        node = parseInterpolation(context) // 获取目标节点
+    if(s.startsWith('{{')) {
+        node = parseInterpolation(context) // 解析插值类型
+    } 
+    // 判断是否元素类型节点，是否以 < 开头，第二个字段是否a-z中的字符
+    else if (s[0] === '<') {
+        if(/[a-z]/i.test(s[1])) {
+            node = parseElement(context) // 解析元素类型
+        }
     }
     nodes.push(node) // 设置节点列表
     return nodes
@@ -49,11 +67,26 @@ function parseInterpolation(context) {
     }
 }
 
-// 封装content逻辑
-function createParserContext(content: string) {
-   return {
-    source:content
-   }
+function parseElement(context) {
+    const element = parseTag(context, TagType.start) // 处理开头标签
+    parseTag(context, TagType.end) // 处理结束标签
+    return element
+    
+}
+
+function parseTag(context: any, type: TagType) {
+    // 1.解析tag
+    const match: any = /^<\/?([a-z]*)/i.exec(context.source) // 标签解析正则
+    const tag = match[1]
+    // 2.处理后的代码推进
+    advanceBy(context, match[0].length + 1) // 推进掉<div + >
+
+    if(type == TagType.start) { // 如果是开头标签就返回
+        return {
+            type: NodeTypes.ELEMENT,
+            tag,
+        }
+    }
 }
 
 // 封装推进代码
