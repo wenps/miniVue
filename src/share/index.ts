@@ -7,3 +7,5 @@ export const isObject = (value) => {
 export const capitalize = (value) => {
     return 'on' + value[0].toUpperCase() + value.slice(1)
 }
+
+export * from "./toDisplayString";

@@ -21,7 +21,7 @@ export function setupRenderEffect(instance, vnode ,container, insertPlace) {
             // 执行render函数会返回一个虚拟节点树subTree，继续调用patch解析虚拟节点
 
             // 将instance.proxy绑定到render上，那么render的this.执行instance.proxy的get操作，读取返回setup的返回值
-            const subTree = (instance.subTree = instance.render.call(instance.proxy)) // 缓存初始化的subTree到instance上，下面更新的时候用来比较
+            const subTree = (instance.subTree = instance.render.call(instance.proxy, instance.proxy)) // 缓存初始化的subTree到instance上，下面更新的时候用来比较
             
             //递归调用patch方法处理vnode树，如果是组件就运行组件mount，如果是元素就运行元素mount
             patch(null ,subTree, container, instance, insertPlace)
@@ -41,7 +41,7 @@ export function setupRenderEffect(instance, vnode ,container, insertPlace) {
                 updateComponentPreRender(instance, next)
             }
 
-            const subTree = instance.render.call(instance.proxy) // 拿到新的subtree，因为执行到effect的更新了，说明当前this里面的值已经有改变了，使用render出来的树的内容和上一次是不一样的
+            const subTree = instance.render.call(instance.proxy, instance.proxy) // 拿到新的subtree，因为执行到effect的更新了，说明当前this里面的值已经有改变了，使用render出来的树的内容和上一次是不一样的
             const preSubTree = instance.subTree // 拿到缓存下来的初始化的subTree
 
             instance.subTree = subTree // 更新缓存的subTree到instance上，下面更新的时候用来比较

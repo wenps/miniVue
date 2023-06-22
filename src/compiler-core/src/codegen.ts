@@ -47,13 +47,13 @@ function genFunctionPreamble(context, ast: any) {
     const { push, helper } = context;
 
     // helperMapName 依赖资源映射表
-    const vue = '"vue"';
+    const vue = 'vue';
 
-    const aliasHelpers = (s) => `${helper(s, false)} as ${helper(s)}`;
+    const aliasHelpers = (s) => `${helper(s, false)}: ${helper(s)}`;
 
     // 判断当前是否需要导入资源，插值类型需要，但是text类型是不用的，因此这里判断一下
     if (ast.helpers.length > 0) {
-        push(`import { ${ast.helpers.map(aliasHelpers).join(', ')} } from ${vue} `);
+        push(`const { ${ast.helpers.map(aliasHelpers).join(', ')} } = ${vue} `);
         push('\n');
     }
 }

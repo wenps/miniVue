@@ -2,6 +2,8 @@
 
 import { ShareFlags } from '../share/shareFlags';
 
+export { createVNode as createElementVNode }
+
 // 虚拟节点有两种主要类型
 // 一种是组件，其中tyep是一个对象，这种代表是组件，props是组件的props用于父子组件传值, props不允许修改
 // 一种是元素，其中接受type, props?, children?，type是一个字符串，代表元素类型

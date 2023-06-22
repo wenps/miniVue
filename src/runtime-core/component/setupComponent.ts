@@ -31,8 +31,9 @@ function setupStatefulComponent(instance: any) {
     // 如果setup存在就执行
     if(setup) {
 
-        // 创建一个全局变量，将组件实例对象存储在currentInstance中，当setup使用了getCurrentInstance的话，就可以拿到外面缓存下来的组件实例对象
-        currentInstance = instance // （2）
+       setCurrentInstance(instance) 
+
+        
 
         // setup会有一个返回值，可能是fn或obj， 如果是fn则认为是一个组件的render函数，如果是obj就把obj注入到组件中
         // 如果是组件虚拟节点，那么传入的props不允许改动，因此需要将props设置为shallowReadonly类型 （props）
@@ -47,13 +48,22 @@ function setupStatefulComponent(instance: any) {
             instance.setupState = setupResult
         }
 
-        // （1）这一步是将组件的对象里面render提前到instance里面
-        if(Component.render){
-            instance.render = Component.render 
-            
-        }
+        finishComponentSetup(instance)
 
     }
+}
+
+function finishComponentSetup(instance) {
+    const Component = instance.type
+
+    if(compiler && !Component.render) { //  Component.render 组件自身render优先级最高
+        if (Component.template) { // 判断当前是否提供了template，如果提供了则借助compiler转成render
+            Component.render  = compiler(Component.template)
+        }
+    }
+
+    // （1）这一步是将组件的对象里面render提前到instance里面
+    instance.render = Component.render 
 }
 
 // 获取当前组件实例对象
@@ -61,7 +71,18 @@ export function getCurrentInstance() {
     return currentInstance
 }
 
+// 设置当前组件实例对象
+export function setCurrentInstance(instance) {
+    // 创建一个全局变量，将组件实例对象存储在currentInstance中，当setup使用了getCurrentInstance的话，就可以拿到外面缓存下来的组件实例对象
+    currentInstance = instance // （2）
+}
 
+let compiler
+
+// 通过这个compiler全局对象去获取到 模板转render的函数
+export function registerRuntimeCompiler(_compiler) {
+    compiler = _compiler
+}
 
 
  
