@@ -1,5 +1,5 @@
 import { NodeTypes } from "./ast"
-import { TO_DISPLAY_STRING, helperMapName } from "./helpersMap"
+import { TO_DISPLAY_STRING } from "./helpersMap"
 
 export function transform(root, options = {}) {
 
@@ -16,18 +16,27 @@ export function transform(root, options = {}) {
 
 // 为根节点提供一个指向默认编译节点的属性
 function createRootCodegen(root: any) {
-    root.codegenNode = root.children[0]
+
+    const child = root.children[0]
+    if(child.type == NodeTypes.ELEMENT) {
+        root.codegenNode = child.codegenNode // 这一步只是为了拿 root.children[0] codegen element类型中处理可以看到
+    } else {
+        root.codegenNode = root.children[0]
+    }
 }
 
 // 遍历 - 深度优先搜索
 function traverseNode(node, context) {
 
     const nodeTransforms = context.nodeTransforms // 获取全局上下文中的插件数组
+
+    const exitFns:any = [] // 创建一个数组收集退出函数
     
 
     // 遍历执行插件数组
     for (let i = 0; i < nodeTransforms.length; i++) {
-        nodeTransforms[i](node);
+        const onExit = nodeTransforms[i](node, context); // 如果是退出函数那就做一层封装，将真实执行函数返回
+        if(onExit) exitFns.push(onExit) // 存储真实执行函数
     }
 
     // 针对不同类型节点作操作
@@ -46,6 +55,11 @@ function traverseNode(node, context) {
             break;
     }
 
+    // 退出的时候执行一下退出函数
+    let i = exitFns.length
+    while (i--) {
+        exitFns[i]()
+    }
     
 }
 

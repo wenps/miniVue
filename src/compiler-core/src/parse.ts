@@ -151,7 +151,6 @@ function advanceBy(context:any, length:number) {
 function isEnd(context:any, elementTagStack) {
     // 2.当遇到结束标签时，结束
     const s = context.source
-    console.log(s,'xxx', elementTagStack)
     // if(parentTag && s.startsWith(`</${parentTag}>`)) { // 动态传入结束标签
     //     return true
     // }

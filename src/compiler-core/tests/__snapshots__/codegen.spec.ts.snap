@@ -1,8 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`codegen happy pass 1`] = `"return function render(_ctx,_cache){return "hi"}"`;
+exports[`codegen happy pass, string 1`] = `"return function render(_ctx,_cache){return "hi"}"`;
 
-exports[`codegen happy pass 2`] = `
+exports[`codegen happy pass, 元素 1`] = `
+"import { toDisplayString as _toDisplayString, createElementVNode as _createElementVNode } from "vue" 
+return function render(_ctx,_cache){return _createElementVNode("div", null, "hi," + _toDisplayString(_ctx.message))}"
+`;
+
+exports[`codegen happy pass, 插值 1`] = `
 "import { toDisplayString as _toDisplayString } from "vue" 
 return function render(_ctx,_cache){return _toDisplayString(_ctx.message)}"
 `;
