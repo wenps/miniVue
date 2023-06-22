@@ -3,4 +3,5 @@ export const enum NodeTypes {
     SIMPLE_EXPRESSION = 'simple_expression', // 简单表达式，如 xiaoshan
     ELEMENT = 'element', // 元素类型
     TEXT = 'text', // 文本类型
+    ROOT = 'root', // 根节点
 }

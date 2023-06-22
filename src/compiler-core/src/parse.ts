@@ -22,7 +22,8 @@ function createParserContext(content: string) {
 // 抽离根节点逻辑
 function createRoot(children) {
     return {
-        children
+        children,
+        type: NodeTypes.ROOT
     }
 }
 // elementTagStack 元素标签栈，用来存储元素标签，判断标签是否闭合等关系
